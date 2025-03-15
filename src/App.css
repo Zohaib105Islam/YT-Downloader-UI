@@ -1,3 +1,67 @@
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background: #f8f9fa;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.logo {
+  width: 120px;
+}
+
+.menu-toggle {
+  cursor: pointer;
+  font-size: 24px;
+}
+
+.menu {
+  display: none;
+}
+
+.menu.open {
+  display: block;
+}
+
+.search-box {
+  text-align: center;
+
+}
+
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.input-container input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.paste-icon {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+button {
+  padding: 10px 15px;
+  margin-top: 10px;
+}
+/* ............................ */
+
+
 /* Topbar Styling */
 .topbar {
   background-color: #f8f9fa;
@@ -7,6 +71,7 @@
   justify-content: space-between;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   position: relative;
+  height: 100px;
 }
 
 /* Logo Styling */
@@ -65,6 +130,7 @@
     border-radius: 5px;
     padding: 10px;
     display: none; /* Hidden by default */
+    z-index: 10;
   }
 
   .menu.open {
@@ -105,16 +171,18 @@ input {
 /* Download Button */
 button {
   padding: 10px 15px;
-  background-color: #ff0000;
-  color: white;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-  transition: background-color 0.3s;
+    width: 40%;
+    margin: 0px auto;
+    background-color: #ff933b;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
 }
 
 button:hover {
-  background-color: #cc0000;
+  background-color: #ff8b06;
 }
 
 /* Video Details */
@@ -168,6 +236,8 @@ button:hover {
   .container {
     width: 90%;
     margin: 30px auto;
+    display: flex;
+    flex-direction: row;
   }
 
   input {
@@ -176,6 +246,7 @@ button:hover {
 
   .download-buttons {
     flex-direction: column;
+    /* width: 70%; */
   }
 
   .download-buttons button {
@@ -197,4 +268,6 @@ button:hover {
   width: 0%;
   transition: width 0.3s;
 }
+
+
 

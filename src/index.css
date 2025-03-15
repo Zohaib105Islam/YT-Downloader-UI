@@ -1,13 +1,137 @@
-body {
+/* Reset Styles */
+* {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  text-align: center;
+}
+
+/* Top Bar */
+.topbar {
+  background-color: #fff;
+  padding: 15px 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.logo {
+  width: 150px;
+}
+.menu {
+  display: flex;
+  gap: 20px;
+}
+.menu a {
+  text-decoration: none;
+  color: #333;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px 15px;
+  transition: 0.3s;
+}
+.menu a:hover {
+  color: #007bff;
+}
+
+/* Search Box */
+.search-box {
+  /* background-color: white; */
+  padding: 30px;
+  margin: 20px auto;
+  border-radius: 10px;
+  /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+  max-width: 800px;
+}
+.search-box h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+.search-box p {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 15px;
+}
+.search-box input {
+  width: 80%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: 10px 0;
+  text-align: center;
+}
+.search-box button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+.search-box button:hover {
+  background-color: #0056b3;
+}
+
+/* Video Details */
+.video-details {
+  background-color: white;
+  padding: 20px;
+  margin: 20px auto;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  text-align: center;
+}
+.video-container img {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+.video-container h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+.download-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.download-btn {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  width: 80%;
+  margin: 0 auto;
+  transition: 0.3s;
+}
+.download-btn:hover {
+  background-color: #218838;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+      flex-direction: column;
+  }
+  .menu {
+      flex-direction: column;
+      text-align: center;
+  }
+  .search-box input {
+      width: 90%;
+  }
 }

@@ -1,0 +1,81 @@
+.download-instructions {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .download-instructions h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 28px;
+  }
+  
+  .steps-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .step {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .step-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 50%;
+    font-size: 20px;
+    font-weight: bold;
+    flex-shrink: 0;
+  }
+  
+  .step-content {
+    flex-grow: 1;
+  }
+  
+  .step-content h3 {
+    margin: 0 0 10px 0;
+    color: #007bff;
+    font-size: 20px;
+  }
+  
+  .step-content p {
+    margin: 0;
+    color: #666;
+    line-height: 1.6;
+    font-size: 16px;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 600px) {
+    .download-instructions {
+      padding: 15px;
+    }
+  
+    .download-instructions h2 {
+      font-size: 24px;
+    }
+  
+    .step-number {
+      width: 35px;
+      height: 35px;
+      font-size: 18px;
+    }
+  
+    .step-content h3 {
+      font-size: 18px;
+    }
+  
+    .step-content p {
+      font-size: 14px;
+    }
+  }
