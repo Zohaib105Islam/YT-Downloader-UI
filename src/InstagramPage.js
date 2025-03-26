@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { fetchVideoDetails, downloadFile } from "./helpers/videoHelper"; // Import the helper functions
 import "./App.css";
 import Footer from "./Footer";
 import { FaBars, FaTimes, FaPaste } from "react-icons/fa";
@@ -9,61 +9,28 @@ import VideoDownloadSection from "./VideoDownloadSections";
 import { Link } from "react-router-dom";
 
 const InstagramPage = () => {
-  const [videoUrl, setVideoUrl] = useState("");
-  const [videoData, setVideoData] = useState(null);
-  const [error, setError] = useState("");
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [pasteIcon, setPasteIcon] = useState(true);
+      const [videoUrl, setVideoUrl] = useState("");
+      const [videoData, setVideoData] = useState(null);
+      const [error, setError] = useState("");
+      const [menuOpen, setMenuOpen] = useState(false);
+      const [pasteIcon, setPasteIcon] = useState(true);
+      const [loading, setLoading] = useState(false);
 
-  const API_URL = "http://localhost:8080";
-
-  const fetchVideoDetails = async () => {
-    setError("");
-    setVideoData(null);
-    try {
-      const response = await axios.get(`${API_URL}/api/youtube/video`, {
-        params: { url: videoUrl },
-      });
-      if (response.data.items?.length > 0) {
-        setVideoData(response.data.items[0]);
-      } else {
-        setError("No Instagram video found.");
-      }
-    } catch (err) {
-      setVideoData({
-        snippet: {
-          title: "Sample Instagram Video",
-          thumbnails: {
-            high: {
-              url: "https://via.placeholder.com/300",
-            },
-          },
-        },
-      });
-      setError("API not available. Showing mock data for testing.");
-    }
-  };
-
-  const downloadFile = async (format, fileName) => {
-    try {
-      const response = await axios.get(`${API_URL}/api/youtube/download`, {
-        params: { url: videoUrl, format, fileName },
-        responseType: "blob",
-      });
-
-      const blob = new Blob([response.data], {
-        type: format === "audio" ? "audio/mp3" : "video/mp4",
-      });
-      const link = document.createElement("a");
-      link.href = window.URL.createObjectURL(blob);
-      link.download = fileName;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } catch (err) {
-      setError("Download not available. API might be down.");
-    }
-  };
+  const handleFetchVideoDetails = async () => {
+        setError("");
+        setVideoData(null);
+        setLoading(true);
+    
+        const result = await fetchVideoDetails(videoUrl);
+    
+        if (result.success) {
+          setVideoData(result.data);
+        } else {
+          setError(result.error);
+        }
+        
+        setLoading(false);
+      };
 
   const handlePaste = async () => {
     try {
@@ -123,8 +90,16 @@ const InstagramPage = () => {
               {pasteIcon ? <FaPaste /> : <FaTimes />}
             </span>
           </div>
-          <button onClick={fetchVideoDetails}>Start Instagram Download</button>
+          <button onClick={handleFetchVideoDetails}>Start</button>
         </section>
+
+        {loading && (
+            <div className="searching-bar">
+              <span className="dot"></span>
+              <span className="dot"></span>
+              <span className="dot"></span>
+            </div>
+          )}
 
         {error && <p className="error">{error}</p>}
 
@@ -132,39 +107,14 @@ const InstagramPage = () => {
           <section className="video-details">
             <h2>Instagram Video Found</h2>
             <div className="video-container">
-              <img
-                src={videoData.snippet.thumbnails?.high?.url}
-                alt={videoData.snippet.title}
-              />
-              <h3>{videoData.snippet.title}</h3>
+                <img src={videoData.thumbnail} />
+                <h3>{videoData.title}</h3>
             </div>
             <div className="download-options">
-              <button
-                onClick={() => downloadFile("audio", `${videoData.snippet.title}.mp3`)}
-              >
-                Download Instagram MP3
-              </button>
-              <button
-                onClick={() =>
-                  downloadFile("video360p", `${videoData.snippet.title}.mp4`)
-                }
-              >
-                Download Instagram 360p
-              </button>
-              <button
-                onClick={() =>
-                  downloadFile("video720p", `${videoData.snippet.title}.mp4`)
-                }
-              >
-                Download Instagram 720p
-              </button>
-              <button
-                onClick={() =>
-                  downloadFile("video1080p", `${videoData.snippet.title}.mp4`)
-                }
-              >
-                Download Instagram 1080p
-              </button>
+              <button onClick={() => downloadFile("audio", "")}>Download MP3</button>
+              <button onClick={() => downloadFile("video360p", "")}>Download 360p</button>
+              <button onClick={() => downloadFile("video720p", "")}>Download 720p</button>
+              <button onClick={() => downloadFile("video1080p", "")}>Download 1080p</button>
             </div>
           </section>
         )}

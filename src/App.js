@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
-import axios from "axios";
+import { fetchVideoDetails, downloadFile } from "./helpers/videoHelper"; // Import the helper functions
 import "./App.css";
 import Footer from "./Footer";
 import { FaBars, FaTimes, FaPaste } from "react-icons/fa";
@@ -19,55 +19,23 @@ const App = () => {
   const [error, setError] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   const [pasteIcon, setPasteIcon] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [downloadProgress, setDownloadProgress] = useState(0); // New state for progress
 
-  const API_URL = "http://localhost:8080";
-
-  const fetchVideoDetails = async () => {
+  const handleFetchVideoDetails = async () => {
     setError("");
     setVideoData(null);
-    try {
-      const response = await axios.get(`${API_URL}/api/youtube/video`, {
-        params: { url: videoUrl },
-      });
-      if (response.data.items?.length > 0) {
-        setVideoData(response.data.items[0]);
-      } else {
-        setError("No video found. Please try another URL.");
-      }
-    } catch (err) {
-      setVideoData({
-        snippet: {
-          title: "Sample Video",
-          thumbnails: {
-            high: {
-              url: "https://via.placeholder.com/300",
-            },
-          },
-        },
-      });
-      setError("API not available. Showing mock data for testing.");
-    }
-  };
+    setLoading(true);
 
-  const downloadFile = async (format, fileName) => {
-    try {
-      const response = await axios.get(`${API_URL}/api/youtube/download`, {
-        params: { url: videoUrl, format, fileName },
-        responseType: "blob",
-      });
+    const result = await fetchVideoDetails(videoUrl);
 
-      const blob = new Blob([response.data], {
-        type: format === "audio" ? "audio/mp3" : "video/mp4",
-      });
-      const link = document.createElement("a");
-      link.href = window.URL.createObjectURL(blob);
-      link.download = fileName;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } catch (err) {
-      setError("Download not available. API might be down.");
+    if (result.success) {
+      setVideoData(result);
+    } else {
+      setError(result.error);
     }
+    
+    setLoading(false);
   };
 
   const handlePaste = async () => {
@@ -81,7 +49,7 @@ const App = () => {
   };
 
   const handleLogoClick = () => {
-    window.location.href = "/"; // Redirect to root (App.js)
+    window.location.href = "/";
   };
 
   return (
@@ -133,8 +101,16 @@ const App = () => {
                       {pasteIcon ? <FaPaste /> : <FaTimes />}
                     </span>
                   </div>
-                  <button onClick={fetchVideoDetails}>Start</button>
+                  <button onClick={handleFetchVideoDetails}>Start</button>
                 </section>
+
+                {loading && (
+                  <div className="searching-bar">
+                    <span className="dot"></span>
+                    <span className="dot"></span>
+                    <span className="dot"></span>
+                  </div>
+                )}
 
                 {error && <p className="error">{error}</p>}
 
@@ -142,40 +118,28 @@ const App = () => {
                   <section className="video-details">
                     <h2>Video Found</h2>
                     <div className="video-container">
-                      <img
-                        src={videoData.snippet.thumbnails?.high?.url}
-                        alt={videoData.snippet.title}
-                      />
-                      <h3>{videoData.snippet.title}</h3>
+                      <img src={videoData.data.thumbnail} alt={videoData.data.title} />
+                      <h3>{videoData.data.title}</h3>
+                      
                     </div>
+                    
                     <div className="download-options">
-                      <button
-                        onClick={() => downloadFile("audio", `${videoData.snippet.title}.mp3`)}
-                      >
-                        Download MP3
-                      </button>
-                      <button
-                        onClick={() =>
-                          downloadFile("video360p", `${videoData.snippet.title}.mp4`)
-                        }
-                      >
-                        Download 360p
-                      </button>
-                      <button
-                        onClick={() =>
-                          downloadFile("video720p", `${videoData.snippet.title}.mp4`)
-                        }
-                      >
-                        Download 720p
-                      </button>
-                      <button
-                        onClick={() =>
-                          downloadFile("video1080p", `${videoData.snippet.title}.mp4`)
-                        }
-                      >
-                        Download 1080p
-                      </button>
+                      <button onClick={() => downloadFile(videoData,"audio" , "", setDownloadProgress)}>Download MP3</button>
+                      <button onClick={() => downloadFile(videoData,"video" , "360p", setDownloadProgress)}>Download 360p</button>
+                      <button onClick={() => downloadFile(videoData,"video" , "720p", setDownloadProgress)}>Download 720p</button>
+                      <button onClick={() => downloadFile(videoData,"video" , "1080p", setDownloadProgress)}>Download 1080p</button>
                     </div>
+
+                    {/* Progress Bar */}
+                   {downloadProgress > 0 && (
+                     <div className="progress-bar-container">
+                        <div className="progress-bar" style={{ width: `${downloadProgress}%` }}>
+                        {downloadProgress}%
+                        </div>
+                     </div>
+                    )}
+
+
                   </section>
                 )}
               </main>
@@ -197,3 +161,5 @@ const App = () => {
 };
 
 export default App;
+
+
